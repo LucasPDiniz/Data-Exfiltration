@@ -5,7 +5,7 @@ The Data Exfiltration is the process of transferring data from a system or netwo
 Data exfiltration can have severe consequences for an organization or individual, including financial loss, reputational damage, and privacy breaches.
 
 <p align="center">
-  <img width="600" height="450" src="./img/1.JPG">
+  <img width="600" height="450" src="./img/1.jpg">
 </p>
 
 Here we will use some techniques below to exemplify data theft;
@@ -23,7 +23,7 @@ For this study, we used the **TryHackMe** room as an example ([TryHackMe - Data 
 In this topic, we will use the TCP protocol to transfer data from an already compressed host. This is the simplest technique, where we know that there is a weak security system.
 
 <p align="center">
-  <img width="650" height="200" src="./img/2.JPG">
+  <img width="650" height="200" src="./img/2.jpg">
 </p>
 
 1. To exfiltrate the data, the hacker opens port 15251 (uncommon).
@@ -54,11 +54,13 @@ Below we can see the sending and receiving of data via TCP socket.
 * On the victim's machine, I am sending files from the **/tmp/files** folder
 
 <p align="center">
-  <img width="800" height="120" src="./img/4.JPG">
+  <img width="800" height="120" src="./img/4.jpg">
 </p>
 
 * On the attacker's computer, we receive the data on port 1337 and reverse the DD, base64 and TAR encoding.
 
 <p align="center">
-  <img width="800" height="300" src="./img/5.JPG">
+  <img width="800" height="300" src="./img/5.jpg">
 </p>
+
+## SSH
