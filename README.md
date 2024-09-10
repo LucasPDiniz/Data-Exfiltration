@@ -1,4 +1,4 @@
-# Data Exfiltration
+# Data Exfiltration :globe_with_meridians:
 
 The Data Exfiltration is the process of transferring data from a system or network without authorization. This type of attack typically involves obtaining and extracting sensitive or confidential information, such as personal, financial, or corporate data, without the consent of the data owner. Data exfiltration is used to hide an adversary's malicious activities and bypass security products. For example, the DNS exfiltration technique can evade security products, such as a firewall.
 
@@ -30,7 +30,7 @@ In this topic, we will use the TCP protocol to transfer data from an already com
 2. The hacker opens port 1337 to receive data.
 3. The victim communicates with the hacker and begins transferring data.
 
-### Starting the Attack
+### Starting the Attack :fire:
 
 * Let's use NC (NetCat) to start a listener on the attacker. In this step, we will transfer all data received on port 1337 to the **data.txt** file.
 
@@ -207,7 +207,7 @@ knowing this, there is a limit that we can transfer via DNS. Below we have an ex
 4. As this domain does not exist on the local network, the local DNS requests an external DNS.
 5. Is sent to the NS controlled by the attacker, and extracts the subdomain data.
 
-### Starting the attack
+### Starting the attack :fire:
 
 To monitor DNS request traffic, we need to open UDP port 53. Let's do this on the **attacker**.
 
@@ -247,3 +247,10 @@ Credit Card: 2151-1321-8952-1214
 Expire: 01/01/2026
 Code: 258
 ```
+---
+<p align="center">
+  See you next time :wink:
+</p>
+<p align="center">
+  <img width="300" height="300" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHdzZTV2cnpmem1yc240eGFrenk1YXNoeXdiejV5dnZwMXFwMGZjaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AUMxbiDIzBOiFGA71r/giphy.gif">
+</p>
